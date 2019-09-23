@@ -21,6 +21,7 @@
 const OBLOQ_MQTT_EASY_IOT_SERVER_CHINA = "iot.dfrobot.com.cn"
 const OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL = "mqtt.beebotte.com"
 const OBLOQ_MQTT_EASY_IOT_SERVER_EN = "iot.dfrobot.com"
+const OBLOQ_MQTT_EASY_IOT_SERVER_HIVEMQ = "broker.hivemq.com"
 //const OBLOQ_MQTT_EASY_IOT_PORT = 1883
 //other iot
 //const OBLOQ_MQTT_USER_IOT_SERVER = "---.-----.---"
@@ -231,7 +232,9 @@ namespace microIoT {
         //% blockId=SERVERS_English block="EasyIOT_EN"
         English,
         //% blockId=SERVERS_Global block="Beebotte"
-        Global
+        Global,
+        //% blockId=SERVERS_Hivemq block="Hivemq"
+        Hivemq
     }
 
     export enum TOPIC {
@@ -430,12 +433,9 @@ namespace microIoT {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_CHINA)
         } else if (servers == SERVERS.English) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_EN)
-        } else if (servers == SERVERS_Global){ 
+        } else if (servers == SERVERS.Global) {
             microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_GLOBAL)
-        } else{
-            microIoT_setPara(SETMQTT_SERVER, servers)
-        }
-        
+        } else { microIoT_setPara(SETMQTT_SERVER, OBLOQ_MQTT_EASY_IOT_SERVER_HIVEMQ) }
         microIoT_setPara(SETMQTT_PORT, "1883")
         microIoT_setPara(SETMQTT_ID, IOT_ID)
         microIoT_setPara(SETMQTT_PASSWORLD, IOT_PWD)
@@ -463,23 +463,6 @@ namespace microIoT {
             basic.pause(200)
         }*/
 
-    }
-
-    /**
-     * Two parallel stepper motors are executed simultaneously(DegreeDual).
-     * @param SSID to SSID ,eg: "yourSSID"
-     * @param PASSWORD to PASSWORD ,eg: "yourPASSWORD"
-     * @param IOT_ID to IOT_ID ,eg: "yourIotId"
-     * @param IOT_PWD to IOT_PWD ,eg: "yourIotPwd"
-     * @param IOT_TOPIC to IOT_TOPIC ,eg: "yourIotTopic"
-    */
-    //% weight=100
-    //% blockExternalInputs=1
-    //% blockId=microIoT_MQTT1 block="Micro:IoT setup mqtt|IOT_ID: %IOT_ID| IOT_PWD :%IOT_PWD| IoT service:|(default topic_0) Topic: %IOT_TOPIC| start connection:| server: %MQTT_IP"
-    export function microIoT_MQTT1(/*SSID: string, PASSWORD: string,*/
-        IOT_ID: string, IOT_PWD: string,
-        IOT_TOPIC: string, MQTT_IP: string): void {
-            microIoT_MQTT(IOT_ID,IOT_PWD,IOT_TOPIC,MQTT_IP);            
     }
 
     //% weight=200
@@ -658,6 +641,44 @@ namespace microIoT {
         tempStr = "trigger/" + microIoT_WEBHOOKS_EVENT + "/with/key/" + microIoT_WEBHOOKS_KEY + ",{\"value1\":\"" + value1 + "\",\"value2\":\"" + value2 + "\",\"value3\":\"" + value3 + "\" }" + "\r"
         microIoT_ParaRunCommand(POST_URL, tempStr)
         return microIoT_http_wait_request(time);
+    }
+
+
+    /**
+     * connect to https://thingspeak.com/ to store the data from micro:bit
+     * 連接到 https://thingspeak.com/ 儲存micro:bit所得到的感應器資料
+    */
+    //% weight=78
+    //% blockId=microIoT_sendToThingSpeak
+    //% expandableArgumentMode"toggle" inlineInputMode=inline
+    //% block="send data to ThingSpeak :| write key: %myKey field1: %field1 || field2: %field2 field3: %field3 field4: %field4 field5: %field5 field6: %field6 field7: %field7 field8: %field8"
+    export function microIoT_sendToThingSpeak(myKey: string, field1:number, field2?:number, field3?:number, field4?:number, field5?:number, field6?:number, field7?:number, field8?:number): void {
+        microIoT_setPara(SETHTTP_IP, "api.thingspeak.com")
+        basic.showLeds(`
+        . . . . .
+        . . . . .
+        . # # # .
+        . . . . .
+        . . . . .
+        `)
+        let returnCode=""
+        let myArr:number[]=[field1,field2,field3,field4,field5,field6,field7,field8]
+        let tempStr = "update?api_key=" + myKey
+        for(let i=0;i<myArr.length;i++)
+        {
+            if (myArr[i]!=null)
+                tempStr+="&field"+(i+1)+"="+myArr[i]
+            else
+                break
+        }
+        microIoT_ParaRunCommand(POST_URL, tempStr)
+        let returnData=microIoT_http_wait_request(2000);
+        if (returnData=='timeOut' || returnData=='requestFailed'){
+            basic.showIcon(IconNames.No)
+        } else {
+            basic.showIcon(IconNames.Yes)
+        }
+
     }
 
     /**
