@@ -34,5 +34,8 @@
     "microIoT.setIndexColor|block": "設定第 |%index 個LED，顏色|%rgb",
     "microIoT.ledRange|block": "設定LED顯示範圍，從第|%from 個，到第|%to 個",
     "microIoT.rgb|block": "紅|%r 綠|%g 藍|%b",
-    "microIoT.ledBlank|block": "LED燈全部熄滅"
+    "microIoT.ledBlank|block": "LED燈全部熄滅",
+    "microIoT.microIoT_sendToThingSpeak|block": "傳送資料到ThingSpeak |寫入存取碼: %myKey field1: %field1 || field2: %field2 field3: %field3 field4: %field4 field5: %field5 field6: %field6 field7: %field7 field8: %field8",
+    "microIoT.microIoT_sendToIFTTT|block": "傳送資料到IFTTT觸發其他事件:| 事件名稱: %eventName| 存取金鑰: %myKey || value1: %value1 value2: %value2 value3: %value3"
+}
 }
