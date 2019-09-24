@@ -647,6 +647,7 @@ namespace microIoT {
     /**
      * connect to https://thingspeak.com/ to store the data from micro:bit
      * 連接到 https://thingspeak.com/ 儲存micro:bit所得到的感應器資料
+     * @param myKey to myKey ,eg: "yourWriteKey"
     */
     //% weight=78
     //% blockId=microIoT_sendToThingSpeak
