@@ -654,6 +654,7 @@ namespace microIoT {
     //% block="send data to ThingSpeak :| write key: %myKey field1: %field1 || field2: %field2 field3: %field3 field4: %field4 field5: %field5 field6: %field6 field7: %field7 field8: %field8"
     export function microIoT_sendToThingSpeak(myKey: string, field1:number, field2?:number, field3?:number, field4?:number, field5?:number, field6?:number, field7?:number, field8?:number): void {
         microIoT_setPara(SETHTTP_IP, "api.thingspeak.com")
+        microIoT_setPara(SETHTTP_PORT, "80")
         basic.showLeds(`
         . . . . .
         . . . . .
@@ -672,8 +673,10 @@ namespace microIoT {
                 break
         }
         microIoT_ParaRunCommand(POST_URL, tempStr)
-        let returnData=microIoT_http_wait_request(2000);
-        if (returnData=='timeOut' || returnData=='requestFailed'){
+        let returnData=microIoT_http_wait_request(10000);
+        if (returnData=='timeOut'){
+            basic.showIcon(IconNames.Sad)
+        } else if (returnData=='requestFailed'){
             basic.showIcon(IconNames.No)
         } else {
             basic.showIcon(IconNames.Yes)
