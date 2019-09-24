@@ -646,7 +646,6 @@ namespace microIoT {
 
     /**
      * connect to https://thingspeak.com/ to store the data from micro:bit
-     * 連接到 https://thingspeak.com/ 儲存micro:bit所得到的感應器資料
      * @param myKey to myKey ,eg: "yourWriteKey"
     */
     //% weight=78
@@ -662,7 +661,6 @@ namespace microIoT {
         . . . . .
         . . . . .
         `)
-        let returnCode=""
         let myArr:number[]=[field1,field2,field3,field4,field5,field6,field7,field8]
         let tempStr = "update?api_key=" + myKey
         for(let i=0;i<myArr.length;i++)
@@ -684,6 +682,46 @@ namespace microIoT {
         }
 
     }
+
+    /**
+     * connect to IFTTT to trig some event and notify you
+     * @param eventName to eventName ,eg: "yourEventName"
+     * @param myKey to myKey ,eg: "yourKey"
+    */
+    //% weight=78
+    //% blockId=microIoT_sendToIFTTT
+    //% expandableArgumentMode"toggle" inlineInputMode=inline
+    //% block="send data to IFTTT to trig other event:| event name: %eventName| your key: %myKey || value1: %value1 value2: %value2 value3: %value3"
+    export function microIoT_sendToIFTTT(eventName:string, myKey: string, value1?:number, value2?:number, value3?:number): void {
+        microIoT_setPara(SETHTTP_IP, "maker.ifttt.com")
+        basic.showLeds(`
+        . . . . .
+        . . . . .
+        . # # # .
+        . . . . .
+        . . . . .
+        `)
+        let myArr:number[]=[value1,value2,value3]
+        let tempStr = "trigger/"+eventName+"/with/key/" + myKey+"?"
+        for(let i=0;i<myArr.length;i++)
+        {
+            if (myArr[i]!=null)
+                tempStr+="&value"+(i+1)+"="+myArr[i]
+            else
+                break
+        }
+        tempStr=tempStr + '\r'
+        microIoT_ParaRunCommand(GET_URL, tempStr)
+        let returnData=microIoT_http_wait_request(10000);
+        if (returnData=='timeOut'){
+            basic.showIcon(IconNames.Sad)
+        } else if (returnData=='requestFailed'){
+            basic.showIcon(IconNames.No)
+        } else {
+            basic.showIcon(IconNames.Yes)
+        }
+    }
+}
 
     /**
      * The HTTP put request,Obloq.put() can only be used for http protocol!
