@@ -672,7 +672,7 @@ namespace microIoT {
                 break
         }
         tempStr=tempStr + '\r'
-        microIoT_ParaRunCommand(POST_URL, tempStr)
+        microIoT_ParaRunCommand(GET_URL, tempStr)
         let returnData=microIoT_http_wait_request(10000);
         if (returnData=='timeOut'){
             basic.showIcon(IconNames.Sad)
