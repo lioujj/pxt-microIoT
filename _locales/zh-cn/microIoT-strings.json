@@ -34,5 +34,7 @@
     "microIoT.setIndexColor|block": "设置 灯号 |%index 颜色|%rgb",
     "microIoT.ledRange|block": "灯号 从|%from 到|%to",
     "microIoT.rgb|block": "红|%r 绿|%g 蓝|%b",
-    "microIoT.ledBlank|block": "RGB灯全部熄灭"
+    "microIoT.ledBlank|block": "RGB灯全部熄灭",
+    "microIoT.microIoT_sendToThingSpeak|block": "傳送資料到ThingSpeak |寫入存取碼: %myKey field1: %field1 || field2: %field2 field3: %field3 field4: %field4 field5: %field5 field6: %field6 field7: %field7 field8: %field8",
+    "microIoT.microIoT_sendToIFTTT|block": "傳送資料到IFTTT觸發其他事件:| 事件名稱: %eventName| 存取金鑰: %myKey || value1: %value1 value2: %value2 value3: %value3"
 }
