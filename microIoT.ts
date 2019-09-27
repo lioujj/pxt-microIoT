@@ -120,6 +120,8 @@ enum NeoPixelColors {
 namespace microIoT {
 
 //-------------------------------------
+    let cityID = ""
+    let weatherKey = ""
     let wInfo: string[][] = [
         ["02_Weather", "main", "", "s"],
         ["description", "description", "", "s"],
